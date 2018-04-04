@@ -42,7 +42,11 @@
         yspeed: 8
       }
     ],
-    playerImg = document.querySelector('.ship');
+    playerImg = document.querySelector('.ship'),
+    pauseBtn = document.querySelector('.pauseBtn'),
+    playBtn = document.querySelector('.playBtn');
+
+  var playState = true;
 
 
   // FUNCTIONS
@@ -55,6 +59,32 @@
       ctx.fillStyle = 'rgba(200, 0, 0, 0.5)';
       ctx.fillRect(bullet.x, bullet.y, bullet.x2, bullet.y2);
       bullet.y -= bullet.speed;
+
+      var bulletIndex = index;
+
+      boxes.forEach((box, index) => {
+
+        // check for collision between bullets and boxes enemies
+        if (bullet.y <= (box.y + box.y1) && bullet.y > box.y && bullet.x > box.x && bullet.x < (box.x + box.x1)) {
+          // delete enemy boxes
+          delete boxes[index];
+          delete bullets[bulletIndex];
+
+          let boomsound = document.createElement('audio');
+          boomsound.src = 'audio/explosion.mp3';
+
+          document.body.appendChild(boomsound);
+
+          boomsound.addEventListener('ended', () => {
+            document.body.removeChild(boomsound);
+          });
+
+          boomsound.play();
+        }
+
+      })
+
+
 
       if (bullet.y < 0) {
         delete bullets[index];
@@ -76,13 +106,16 @@
       if (box.y + box.y1 > theCanvas.height) {
         box.yspeed *= -1;
       } else if (box.y < 0) {
-        box.yspeed *=-1;
+        box.yspeed *= -1;
       }
 
       box.x += box.xspeed;
       box.y += box.yspeed;
     })
 
+    if (playState == false) {
+      return
+    }
     window.requestAnimationFrame(draw);
   }
 
@@ -132,9 +165,26 @@
     bullets.push(newBullet);
   }
 
+  function moveShip(e) {
+    player.x = e.clientX - theCanvas.offsetLeft;
+  }
+
+
+  function pauseGame() {
+    playState = false;
+  }
+
+  function playGame() {
+    playState = true;
+    window.requestAnimationFrame(draw);
+  }
+
 
   //EVENTS
-  window.addEventListener('keydown', movePlayer);
+  //  window.addEventListener('keydown', movePlayer);
   window.requestAnimationFrame(draw);
   theCanvas.addEventListener('click', createBullet);
+  theCanvas.addEventListener('mousemove', moveShip);
+  pauseBtn.addEventListener('click', pauseGame);
+  playBtn.addEventListener('click', playGame);
 })();
