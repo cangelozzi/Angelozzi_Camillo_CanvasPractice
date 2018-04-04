@@ -1,0 +1,40 @@
+@charset "UTF-8";
+
+/* CSS Document */
+
+.hidden {
+  display: none;
+}
+
+
+/* CLEARFIX */
+
+.clearfix:after {
+  visibility: hidden;
+  display: block;
+  content: " ";
+  clear: both;
+  height: 0;
+}
+
+
+body {
+  text-align: center;
+  user-select: none;
+}
+
+canvas {
+  position: relative;
+  border: thin solid black;
+  display: block;
+  margin: 0 auto;
+  margin-top: 20px;
+}
+
+button {
+  margin: 0 8px;
+  user-select: none;
+  margin-top: 10px;
+}
+
+
