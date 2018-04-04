@@ -13,6 +13,35 @@
       speed: 7
     },
     bullets = [],
+    boxes = [
+      {
+        x: 30,
+        y: 30,
+        x1: 30,
+        y1: 30,
+        color: 'rgba(0,0,200,0.5)',
+        xspeed: 5,
+        yspeed: 8
+      },
+      {
+        x: 90,
+        y: 90,
+        x1: 40,
+        y1: 40,
+        color: 'rgba(0,200,0,0.5)',
+        xspeed: 5,
+        yspeed: 8
+      },
+      {
+        x: 150,
+        y: 150,
+        x1: 30,
+        y1: 30,
+        color: 'rgba(200,0,0,0.5)',
+        xspeed: 5,
+        yspeed: 8
+      }
+    ],
     playerImg = document.querySelector('.ship');
 
 
@@ -22,10 +51,36 @@
     ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
 
     // bullets animation inside Canvas
-    bullets.forEach(bullet => {
+    bullets.forEach((bullet, index) => {
       ctx.fillStyle = 'rgba(200, 0, 0, 0.5)';
       ctx.fillRect(bullet.x, bullet.y, bullet.x2, bullet.y2);
       bullet.y -= bullet.speed;
+
+      if (bullet.y < 0) {
+        delete bullets[index];
+      }
+    });
+
+    // boxes enemies
+    boxes.forEach(box => {
+      ctx.fillStyle = box.color;
+      ctx.fillRect(box.x, box.y, box.x1, box.y1);
+
+      if (box.x + box.x1 > theCanvas.width) {
+        box.xspeed *= -1;
+      } else if (box.x < 0) {
+        box.xspeed *= -1;
+      }
+
+
+      if (box.y + box.y1 > theCanvas.height) {
+        box.yspeed *= -1;
+      } else if (box.y < 0) {
+        box.yspeed *=-1;
+      }
+
+      box.x += box.xspeed;
+      box.y += box.yspeed;
     })
 
     window.requestAnimationFrame(draw);
